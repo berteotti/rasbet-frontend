@@ -1,3 +1,7 @@
+import { queryClient } from "../query";
+
+const token = queryClient.getQueryData(["token"]);
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // users
@@ -11,18 +15,25 @@ export const login = (data) =>
   }).then((res) => res.json());
 
 export const register = (data) =>
-  fetch(`${API_URL}/register`, {
+  fetch(`${API_URL}/register/`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   }).then((res) => res.json());
 
 export const getUser = (data) =>
-  fetch(`${API_URL}/users/${data.id}`, {
+  fetch(`${API_URL}/users/${data.id}/`, {
     method: "GET",
+    headers: {
+      Authorization: "Bearer " + token?.access,
+      "Content-Type": "application/json",
+    },
   }).then((res) => res.json());
 
 export const updateUser = (data) =>
-  fetch(`${API_URL}/users/${data.id}`, {
+  fetch(`${API_URL}/users/${data.id}/`, {
     method: "PATCH",
     body: JSON.stringify(data),
   }).then((res) => res.json());
@@ -34,7 +45,7 @@ export const getBets = (data) =>
   }).then((res) => res.json());
 
 export const getBet = (data) =>
-  fetch(`${API_URL}/bets/${data.id}`, {
+  fetch(`${API_URL}/bets/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
 
@@ -45,7 +56,7 @@ export const getBookmakers = (data) =>
   }).then((res) => res.json());
 
 export const getBookmaker = (data) =>
-  fetch(`${API_URL}/bookmaker/${data.id}`, {
+  fetch(`${API_URL}/bookmaker/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
 
@@ -56,7 +67,7 @@ export const getGames = (data) =>
   }).then((res) => res.json());
 
 export const getgame = (data) =>
-  fetch(`${API_URL}/games/${data.id}`, {
+  fetch(`${API_URL}/games/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
 
@@ -67,7 +78,7 @@ export const getMarkets = (data) =>
   }).then((res) => res.json());
 
 export const getMarket = (data) =>
-  fetch(`${API_URL}/markets/${data.id}`, {
+  fetch(`${API_URL}/markets/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
 // outcomes
@@ -77,12 +88,12 @@ export const getOutcomes = (data) =>
   }).then((res) => res.json());
 
 export const getOutcome = (data) =>
-  fetch(`${API_URL}/outcomes/${data.id}`, {
+  fetch(`${API_URL}/outcomes/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
 
 // wallets
 export const getWallet = (data) =>
-  fetch(`${API_URL}/wallets/${data.id}`, {
+  fetch(`${API_URL}/wallets/${data.id}/`, {
     method: "GET",
   }).then((res) => res.json());
