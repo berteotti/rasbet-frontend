@@ -18,20 +18,32 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
-import { login } from "../src/api/api";
+import { getUser, login } from "../src/api/api";
+import { useRouter } from "next/router";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 export default function Login() {
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { refetch } = useQuery({
+  const { data, refetch: fetchUser } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(token),
+    enabled: false,
+    select: (data) => data.results[0],
+    onSuccess: () => router.push("/"),
+  });
+
+  const { token, refetch } = useQuery({
     queryKey: ["token"],
     queryFn: () => login({ username, password }),
     enabled: false,
+    onSuccess: () => fetchUser(),
   });
 
   const handleShowClick = () => setShowPassword(!showPassword);
