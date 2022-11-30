@@ -1,99 +1,101 @@
 import { queryClient } from "../query";
 
-const token = queryClient.getQueryData(["token"]);
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// users
-export const login = (data) =>
-  fetch(`${API_URL}/login/`, {
-    method: "POSt",
+const rasbetFetch = (endpoint, options) => {
+  const token = queryClient.getQueryData(["token"]);
+
+  return fetch(`${API_URL}${endpoint}/`, {
     headers: {
+      Authorization: token && "Bearer " + token.access,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    ...options,
   }).then((res) => res.json());
+};
+
+// users
+export const login = (data) => {
+  return rasbetFetch(`/login`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
 
 export const register = (data) =>
-  fetch(`${API_URL}/register/`, {
+  rasbetFetch(`/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(data),
-  }).then((res) => res.json());
+  });
 
-export const getUser = (data) =>
-  fetch(`${API_URL}/users/${data.id}/`, {
+export const getUser = () => {
+  return rasbetFetch(`/users`, {
     method: "GET",
-    headers: {
-      Authorization: "Bearer " + token?.access,
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
+  });
+};
 
 export const updateUser = (data) =>
-  fetch(`${API_URL}/users/${data.id}/`, {
+  rasbetFetch(`/users/${data.id}`, {
     method: "PATCH",
     body: JSON.stringify(data),
-  }).then((res) => res.json());
+  });
 
 // bets
 export const getBets = (data) =>
-  fetch(`${API_URL}/bets/`, {
+  rasbetFetch(`/bets`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 export const getBet = (data) =>
-  fetch(`${API_URL}/bets/${data.id}/`, {
+  rasbetFetch(`/bets/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 // bookmakers
 export const getBookmakers = (data) =>
-  fetch(`${API_URL}/bookmakers/`, {
+  rasbetFetch(`/bookmakers`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 export const getBookmaker = (data) =>
-  fetch(`${API_URL}/bookmaker/${data.id}/`, {
+  rasbetFetch(`/bookmaker/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 // games
 export const getGames = (data) =>
-  fetch(`${API_URL}/games/`, {
+  rasbetFetch(`/games`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 export const getgame = (data) =>
-  fetch(`${API_URL}/games/${data.id}/`, {
+  rasbetFetch(`/games/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 // markets
 export const getMarkets = (data) =>
-  fetch(`${API_URL}/markets/`, {
+  rasbetFetch(`/markets`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 export const getMarket = (data) =>
-  fetch(`${API_URL}/markets/${data.id}/`, {
+  rasbetFetch(`/markets/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 // outcomes
 export const getOutcomes = (data) =>
-  fetch(`${API_URL}/outcomes/`, {
+  rasbetFetch(`/outcomes`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 export const getOutcome = (data) =>
-  fetch(`${API_URL}/outcomes/${data.id}/`, {
+  rasbetFetch(`/outcomes/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
 
 // wallets
 export const getWallet = (data) =>
-  fetch(`${API_URL}/wallets/${data.id}/`, {
+  rasbetFetch(`/wallets/${data.id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  });
