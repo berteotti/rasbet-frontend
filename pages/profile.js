@@ -226,15 +226,6 @@ export default function Profile() {
                                         />
                                     </InputGroup>
                                 </FormControl>
-                                <Button
-                                    borderRadius={0}
-                                    type="submit"
-                                    variant="solid"
-                                    colorScheme="teal"
-                                    width="full"
-                                >
-                                    Registar
-                                </Button>
                             </Stack>
                         </form>
                     </Box>
