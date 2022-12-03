@@ -20,6 +20,8 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getUser, login } from "../src/api/api";
 import { useRouter } from "next/router";
+import { setCookie } from "../src/cookie";
+import { queryClient } from "../src/query";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -35,15 +37,22 @@ export default function Login() {
     queryKey: ["user"],
     queryFn: () => getUser(token),
     enabled: false,
-    select: (data) => data.results[0],
-    onSuccess: () => router.push("/"),
+    onSuccess: (data) => {
+      if (data && data.results) {
+        queryClient.setQueryData(["user"], data.results[0]);
+        router.push("/");
+      }
+    },
   });
 
   const { token, refetch } = useQuery({
     queryKey: ["token"],
     queryFn: () => login({ username, password }),
     enabled: false,
-    onSuccess: () => fetchUser(),
+    onSuccess: (token) => {
+      setCookie("token", token.access, 1);
+      fetchUser();
+    },
   });
 
   const handleShowClick = () => setShowPassword(!showPassword);

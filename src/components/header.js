@@ -2,10 +2,9 @@ import { Button, Flex, HStack, Spacer } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 import { queryClient } from "../query";
+import { useQuery } from "@tanstack/react-query";
 
-export default function Header() {
-  const user = queryClient.getQueryData(["user"]);
-
+export default function Header({ user }) {
   return (
     <Flex justify="space-between">
       RASBET
@@ -19,7 +18,9 @@ export default function Header() {
           </Button>
         </HStack>
       ) : (
-        <Flex>{user.results[0].first_name}</Flex>
+        <Button as={Link} href="/profile">
+          {user.username}
+        </Button>
       )}
     </Flex>
   );
