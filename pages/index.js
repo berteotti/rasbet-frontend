@@ -3,11 +3,31 @@ import Link from "next/link";
 import { queryClient } from "../src/query";
 import styles from "../styles/Home.module.css";
 import Header from "../src/components/header";
-import { getGames } from "../src/api/api";
+import { getGames, getUser } from "../src/api/api";
 import { Button, Flex } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { getCookie, setCookie } from "../src/cookie";
 
 export default function Home() {
+  const user = queryClient.getQueryData(["user"]);
+  const token = process.browser ? getCookie("token") : null;
+  console.log(user);
+  const { data } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(token),
+    enabled: Boolean(token) && !Boolean(user),
+    onSuccess: (data) => {
+      if (data && data.results) {
+        queryClient.setQueryData(["user"], data.results[0]);
+      }
+    },
+    onError: () => {
+      if (token) {
+        setCookie("token", "", 0);
+      }
+    },
+  });
+
   const { data: games } = useQuery({
     queryKey: ["games"],
     queryFn: () => getGames(),
@@ -22,13 +42,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
-        <Header />
+        <Header user={user} />
       </header>
       <main>
         <Flex>
           <Flex direction="column" flex="1">
-            {games ? (
-              games.results.map(({ id, home_team, away_team }) => (
+            {games && games.results ? (
+              games.results?.map(({ id, home_team, away_team }) => (
                 <div key={id}>
                   {id}-{home_team} vs {away_team}
                 </div>

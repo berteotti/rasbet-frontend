@@ -1,17 +1,22 @@
+import { getCookie } from "../cookie";
 import { queryClient } from "../query";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const rasbetFetch = (endpoint, options) => {
-  const token = queryClient.getQueryData(["token"]);
+  const token = getCookie("token");
 
   return fetch(`${API_URL}${endpoint}/`, {
     headers: {
-      Authorization: token && "Bearer " + token.access,
+      Authorization: token && "Bearer " + token,
       "Content-Type": "application/json",
     },
     ...options,
-  }).then((res) => res.json());
+  }).then((res) => {
+    if (res.status !== 200) throw res.json();
+
+    return res.json();
+  });
 };
 
 // users
@@ -19,6 +24,9 @@ export const login = (data) => {
   return rasbetFetch(`/login`, {
     method: "POST",
     body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
@@ -26,6 +34,9 @@ export const register = (data) =>
   rasbetFetch(`/register`, {
     method: "POST",
     body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
 export const getUser = () => {
