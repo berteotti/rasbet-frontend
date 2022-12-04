@@ -49,6 +49,8 @@ export default function Home() {
       paddingY="6"
       backgroundColor="gray.200"
       width="100wh"
+      height="100vh"
+      overflow="auto"
     >
       <Head>
         <title>RASBet</title>
