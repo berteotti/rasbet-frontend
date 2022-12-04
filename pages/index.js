@@ -2,11 +2,20 @@ import Head from "next/head";
 import Link from "next/link";
 import { queryClient } from "../src/query";
 import styles from "../styles/Home.module.css";
-import Header from "../src/components/header";
+import Header from "../src/components/Header";
 import { getGames, getUser } from "../src/api/api";
-import { Button, Flex } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  Heading,
+  VStack,
+  Box,
+  HStack,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getCookie, setCookie } from "../src/cookie";
+import GameRow from "../src/components/GameRow";
 
 export default function Home() {
   const user = queryClient.getQueryData(["user"]);
@@ -35,7 +44,12 @@ export default function Home() {
   const outcomes = null;
 
   return (
-    <div className={styles.container}>
+    <Container
+      maxW="100%"
+      paddingY="6"
+      backgroundColor="gray.200"
+      width="100wh"
+    >
       <Head>
         <title>RASBet</title>
         <meta name="description" content="Best odds only with RASBet" />
@@ -45,19 +59,33 @@ export default function Home() {
         <Header user={user} />
       </header>
       <main>
-        <Flex>
-          <Flex direction="column" flex="1">
-            {games && games.results ? (
-              games.results?.map(({ id, home_team, away_team }) => (
-                <div key={id}>
-                  {id}-{home_team} vs {away_team}
-                </div>
-              ))
-            ) : (
-              <p>No games</p>
-            )}
+        <HStack spacing={6} align="flex-start">
+          <Flex direction="column" flex="1" padding="4" rounded="lg">
+            <Heading as="h3" size="lg" marginBottom="4">
+              Games
+            </Heading>
+            <VStack spacing={4}>
+              {games && games.results ? (
+                games.results?.map((game) => (
+                  <Box w="full" key={game.id}>
+                    <GameRow game={game} />
+                  </Box>
+                ))
+              ) : (
+                <p>No games</p>
+              )}
+            </VStack>
           </Flex>
-          <Flex direction="column" minW="200px">
+          <Flex
+            direction="column"
+            minW="200px"
+            padding="4"
+            background="white"
+            rounded="lg"
+          >
+            <Heading as="h3" size="lg" marginBottom="4">
+              Bets
+            </Heading>
             {outcomes ? (
               outcomes.map(({ id, name, multiplier }) => (
                 <div key={id}>
@@ -69,10 +97,10 @@ export default function Home() {
             )}
             {outcomes && <Button>Submit bet</Button>}
           </Flex>
-        </Flex>
+        </HStack>
       </main>
 
       <footer></footer>
-    </div>
+    </Container>
   );
 }

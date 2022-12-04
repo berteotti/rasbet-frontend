@@ -19,6 +19,7 @@ import {
   SimpleGrid,
   CardHeader,
   CardFooter,
+  Container,
 } from "@chakra-ui/react";
 import {
   FaUserAlt,
@@ -31,7 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
-import Header from "../src/components/header";
+import Header from "../src/components/Header";
 
 const IconUser = chakra(FaUserAlt);
 const IconPass = chakra(FaLock);
@@ -73,7 +74,13 @@ export default function Profile() {
   const handleEmailChange = (event) => setEmail(event.target.value);
 
   return (
-    <>
+    <Container
+      maxW="100%"
+      paddingY="6px"
+      backgroundColor="gray.200"
+      width="100wh"
+      height="100vh"
+    >
       <Head>
         <title>Perfil</title>
         <meta name="description" content="Best odds only with RASBet" />
@@ -83,11 +90,10 @@ export default function Profile() {
         <Header user={user} />
         <Flex
           flexDirection="column"
-          width="100wh"
-          height="100vh"
           backgroundColor="gray.200"
           justifyContent="center"
           alignItems="center"
+          marginTop="50px"
         >
           <Stack
             flexDir="column"
@@ -248,6 +254,6 @@ export default function Profile() {
           </Stack>
         </Flex>
       </main>
-    </>
+    </Container>
   );
 }
