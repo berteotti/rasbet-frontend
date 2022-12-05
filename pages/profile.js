@@ -1,6 +1,5 @@
 import Head from "next/head";
-import {useRef, useState} from "react";
-import FocusLock from 'react-focus-lock';
+import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -25,56 +24,25 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
-  IconButton,
-  ButtonGroup,
   PopoverCloseButton,
-
-  PopoverAnchor,
-  NumberInputField,
-  NumberInput,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInputStepper,
-  FormErrorMessage, Portal,
+  Portal,
 } from "@chakra-ui/react";
-import {
-  FaUserAlt,
-  FaLock,
-  FaArrowCircleRight,
-  FaAt,
-  FaRegUser,
-  FaCartPlus
-} from "react-icons/fa";
+import { FaUserAlt, FaArrowCircleRight, FaAt, FaRegUser } from "react-icons/fa";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { updateUser,updateWallet } from "../src/api/api";
-import {getWallet} from "../src/api/api";
+import { updateUser, updateWallet } from "../src/api/api";
+import { getWallet } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
-import { useDisclosure } from '@chakra-ui/react'
 import Header from "../src/components/header";
-import {Field, Form, Formik, useFormik} from 'formik'
 
 const IconUser = chakra(FaUserAlt);
-const IconPass = chakra(FaLock);
 const IconMail = chakra(FaAt);
 const IconName = chakra(FaRegUser);
-const IconDep = chakra(FaCartPlus);
-
-
-
-
-
-
-
 
 export default function Profile() {
   const router = useRouter();
   const user = queryClient.getQueryData(["user"]);
-  
-
-
 
   if (process.browser && !Boolean(user)) {
     router.push("/");
@@ -98,15 +66,13 @@ export default function Profile() {
 
   const { data: newWallet } = useQuery({
     queryKey: ["wallet"],
-    queryFn: () => getWallet({id: user?.wallet}),
+    queryFn: () => getWallet({ id: user?.wallet }),
     enabled: Boolean(user),
     onSuccess: (data) => {
-      setSum(data.balance)
-
+      setSum(data.balance);
     },
     onError: (err) => {
-      console.log(err)
-
+      console.log(err);
     },
   });
 
@@ -114,7 +80,7 @@ export default function Profile() {
     () =>
       updateWallet({
         id: newWallet.id,
-        balance: defAmount
+        balance: defAmount,
       }),
     {
       onSuccess: (data) => {
@@ -128,26 +94,21 @@ export default function Profile() {
   const [lastName, setLastnName] = useState(user?.last_name);
   const [email, setEmail] = useState(user?.email);
   const [amount, setAmount] = useState(0);
-  const [defAmount,setSum] = useState(0);
-  
+  const [defAmount, setSum] = useState(0);
 
   const handleUsernameChange = (event) => setUsername(event.target.value);
   const handleFirstNameChange = (event) => setFirstName(event.target.value);
   const handleLastNameChange = (event) => setLastnName(event.target.value);
   const handleEmailChange = (event) => setEmail(event.target.value);
-  const incrementAmount = (event) => setAmount(event.target.value)
-  const handleSum = (event) => setSum(Number(defAmount)+  Number(amount));
-  const handleDec = (event) =>{
-    if(Number(defAmount)===0) {
+  const incrementAmount = (event) => setAmount(event.target.value);
+  const handleSum = () => setSum(Number(defAmount) + Number(amount));
+  const handleDec = () => {
+    if (Number(defAmount) === 0) {
       window.alert("Não possui dinheiro na conta.");
-    }
-    else if (Number(amount)>Number(defAmount)){
+    } else if (Number(amount) > Number(defAmount)) {
       window.alert("Quantia excede o valor que está na conta.");
-    }
-    else setSum(Number(defAmount)-Number(amount));
-  }
-  
-
+    } else setSum(Number(defAmount) - Number(amount));
+  };
 
   return (
     <>
@@ -180,7 +141,7 @@ export default function Profile() {
               <Center>
                 <Heading color="teal.500">{firstName} </Heading>
               </Center>
-              <Center color="teal"> Saldo: {defAmount}$ </Center>
+              <Center color="teal"> Saldo: {defAmount}€ </Center>
               <Center>
                 <HStack>
                   <h1 style={{ color: "teal" }}>
@@ -210,7 +171,9 @@ export default function Profile() {
                   <CardFooter>
                     <Popover>
                       <PopoverTrigger>
-                        <Button size="sm" colorScheme="teal" variant="outline">Depositar</Button>
+                        <Button size="sm" colorScheme="teal" variant="outline">
+                          Depositar
+                        </Button>
                       </PopoverTrigger>
                       <Portal>
                         <PopoverContent>
@@ -218,27 +181,29 @@ export default function Profile() {
                           <PopoverHeader>Indique a quantia</PopoverHeader>
                           <PopoverCloseButton />
                           <PopoverBody>
-                            <form  onSubmit={(event) => {
-                              event.preventDefault();
-                              walletMutation.mutate();
-                            }}>
-                            <FormControl>
-                              <InputGroup>
-                                <Input
+                            <form
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                walletMutation.mutate();
+                              }}
+                            >
+                              <FormControl>
+                                <InputGroup>
+                                  <Input
                                     type="amount"
                                     placeholder="5"
                                     value={amount}
                                     onChange={incrementAmount}
-                                />
-                              </InputGroup>
-                            </FormControl>
+                                  />
+                                </InputGroup>
+                              </FormControl>
                               <Button
-                                  onClick={handleSum}
-                                  borderRadius={0}
-                                  type="submit"
-                                  variant="solid"
-                                  colorScheme="teal"
-                                  width="full"
+                                onClick={handleSum}
+                                borderRadius={0}
+                                type="submit"
+                                variant="solid"
+                                colorScheme="teal"
+                                width="full"
                               >
                                 Confirmar
                               </Button>
@@ -247,7 +212,6 @@ export default function Profile() {
                         </PopoverContent>
                       </Portal>
                     </Popover>
-
                   </CardFooter>
                 </Card>
                 <Card size="sm" align="center">
@@ -260,7 +224,9 @@ export default function Profile() {
                   <CardFooter>
                     <Popover>
                       <PopoverTrigger>
-                        <Button size="sm" colorScheme="teal" variant="outline">Levantar</Button>
+                        <Button size="sm" colorScheme="teal" variant="outline">
+                          Levantar
+                        </Button>
                       </PopoverTrigger>
                       <Portal>
                         <PopoverContent>
@@ -268,27 +234,29 @@ export default function Profile() {
                           <PopoverHeader>Indique a quantia</PopoverHeader>
                           <PopoverCloseButton />
                           <PopoverBody>
-                            <form  onSubmit={(event) => {
-                              event.preventDefault();
-                              walletMutation.mutate();
-                            }}>
+                            <form
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                walletMutation.mutate();
+                              }}
+                            >
                               <FormControl>
                                 <InputGroup>
                                   <Input
-                                      type="amount"
-                                      placeholder="5"
-                                      value={amount}
-                                      onChange={incrementAmount}
+                                    type="amount"
+                                    placeholder="5"
+                                    value={amount}
+                                    onChange={incrementAmount}
                                   />
                                 </InputGroup>
                               </FormControl>
                               <Button
-                                  onClick={handleDec}
-                                  borderRadius={0}
-                                  type="submit"
-                                  variant="solid"
-                                  colorScheme="teal"
-                                  width="full"
+                                onClick={handleDec}
+                                borderRadius={0}
+                                type="submit"
+                                variant="solid"
+                                colorScheme="teal"
+                                width="full"
                               >
                                 Confirmar
                               </Button>
