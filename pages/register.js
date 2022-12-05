@@ -15,11 +15,13 @@ import {
   FormControl,
   FormHelperText,
   InputRightElement,
+  Container,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock, FaAt, FaRegUser } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { register } from "../src/api/api";
 import { useRouter } from "next/router";
+import Header from "../src/components/Header";
 
 const IconUser = chakra(FaUserAlt);
 const IconPass = chakra(FaLock);
@@ -64,21 +66,29 @@ export default function Register() {
   };
 
   return (
-    <div>
+    <Container
+      maxW="100%"
+      paddingY="6px"
+      backgroundColor="gray.200"
+      width="100wh"
+      height="100vh"
+    >
       <Head>
         <title>RASBet</title>
         <meta name="description" content="Best odds only with RASBet" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <header>
+        <Header />
+      </header>
       <main>
         <Flex
           flexDirection="column"
-          width="100wh"
-          height="100vh"
           backgroundColor="gray.200"
           justifyContent="center"
           alignItems="center"
+          marginTop="50px"
         >
           <Stack
             flexDir="column"
@@ -86,8 +96,7 @@ export default function Register() {
             justifyContent="center"
             alignItems="center"
           >
-            <Avatar bg="red.500" />
-            <Heading color="red.400">Registo</Heading>
+            <Heading color="teal.400">Registo</Heading>
             <Box minW={{ base: "90%", md: "468px" }}>
               <form onSubmit={submitRegister}>
                 <Stack
@@ -189,6 +198,6 @@ export default function Register() {
       </main>
 
       <footer></footer>
-    </div>
+    </Container>
   );
 }

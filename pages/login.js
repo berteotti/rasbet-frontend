@@ -15,6 +15,7 @@ import {
   FormControl,
   FormHelperText,
   InputRightElement,
+  Container,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +23,7 @@ import { getUser, login } from "../src/api/api";
 import { useRouter } from "next/router";
 import { setCookie } from "../src/cookie";
 import { queryClient } from "../src/query";
+import Header from "../src/components/Header";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -66,19 +68,27 @@ export default function Login() {
   };
 
   return (
-    <>
+    <Container
+      maxW="100%"
+      paddingY="6"
+      backgroundColor="gray.200"
+      width="100wh"
+      height="100vh"
+    >
       <Head>
         <title>RASBet</title>
         <meta name="description" content="Best odds only with RASBet" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <header>
+        <Header />
+      </header>
       <Flex
         flexDirection="column"
-        width="100wh"
-        height="100vh"
         backgroundColor="gray.200"
         justifyContent="center"
         alignItems="center"
+        marginTop="50px"
       >
         <Stack
           flexDir="column"
@@ -86,8 +96,7 @@ export default function Login() {
           justifyContent="center"
           alignItems="center"
         >
-          <Avatar bg="teal.500" />
-          <Heading color="teal.400">Welcome</Heading>
+          <Heading color="teal.400">Login</Heading>
           <Box minW={{ base: "90%", md: "468px" }}>
             <form onSubmit={submitLogin}>
               <Stack
@@ -153,6 +162,6 @@ export default function Login() {
           </Link>
         </Box>
       </Flex>
-    </>
+    </Container>
   );
 }
