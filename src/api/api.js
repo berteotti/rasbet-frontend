@@ -111,9 +111,8 @@ export const getWallet = (data) =>
     method: "GET",
   });
 
-
 export const updateWallet = (data) =>
-  rasbetFetch(`/wallets/${data.id}`, {
-  method: "PATCH",
-  body: JSON.stringify(data),
-});
+  rasbetFetch(`/wallets/${data.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
