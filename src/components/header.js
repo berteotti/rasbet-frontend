@@ -13,17 +13,37 @@ export default function Header({ user }) {
       </Link>
       {!user ? (
         <HStack>
-          <Button as={Link} href="/login" colorScheme="teal">
+          <Button
+            as={Link}
+            href="/login"
+            colorScheme="teal"
+            textTransform="uppercase"
+          >
             Entrar
           </Button>
-          <Button as={Link} href="/register" colorScheme="teal">
+          <Button
+            as={Link}
+            href="/register"
+            colorScheme="teal"
+            textTransform="uppercase"
+          >
             Registar
           </Button>
         </HStack>
       ) : (
-        <Button as={Link} href="/profile" colorScheme="teal">
-          {user.username}
-        </Button>
+        <HStack>
+          <Button
+            as={Link}
+            href="/bets"
+            colorScheme="teal"
+            textTransform="uppercase"
+          >
+            My bets
+          </Button>
+          <Button as={Link} href="/profile" colorScheme="teal">
+            {user.username}
+          </Button>
+        </HStack>
       )}
     </Flex>
   );

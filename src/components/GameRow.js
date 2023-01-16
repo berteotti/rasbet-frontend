@@ -4,7 +4,7 @@ import React from "react";
 import { getBookmakers, getOutcomes } from "../api/api";
 import { queryClient } from "../query";
 
-export default function GameRow({ game }) {
+export default function GameRow({ game, setBets, bets }) {
   const { home_team, away_team } = game;
 
   const { data: bookmaker } = useQuery({
@@ -36,7 +36,16 @@ export default function GameRow({ game }) {
         <Flex w="full">
           {outcomes.map(({ id, multiplier, result }) => (
             <Flex justifyContent={"center"} key={id} flex="1">
-              <Button colorScheme="teal">
+              <Button
+                disabled={bets.find(({ game: { id } }) => id === game.id)}
+                colorScheme="teal"
+                onClick={() =>
+                  setBets((oldBets) => [
+                    ...oldBets,
+                    { id, result: result, multiplier, game: game },
+                  ])
+                }
+              >
                 <HStack spacing={5}>
                   <div>{result}</div>
                   <div>{multiplier}</div>

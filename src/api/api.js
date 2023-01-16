@@ -13,7 +13,7 @@ const rasbetFetch = (endpoint, options) => {
     },
     ...options,
   }).then((res) => {
-    if (res.status !== 200) throw res.json();
+    if (res.status < 200 || res.status >= 300) throw res.json();
 
     return res.json();
   });
@@ -62,6 +62,12 @@ export const getBet = (data) =>
     method: "GET",
   });
 
+export const createBet = (data) =>
+  rasbetFetch(`/bets/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
 // bookmakers
 export const getBookmakers = (data) =>
   rasbetFetch(`/bookmakers?game=${data.game}&key=${data.key}`, {
@@ -102,6 +108,11 @@ export const getOutcomes = (data) =>
 
 export const getOutcome = (data) =>
   rasbetFetch(`/outcomes/${data.id}/`, {
+    method: "GET",
+  });
+
+export const getBetOutcomes = (data) =>
+  rasbetFetch(`/bet_outcomes?bet=${data.bet}`, {
     method: "GET",
   });
 
