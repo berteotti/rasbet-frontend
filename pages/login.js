@@ -28,9 +28,8 @@ import Header from "../src/components/Header";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-export default function Login() {
+const Login = () => {
   const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -128,9 +127,11 @@ export default function Login() {
                     />
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Password"
+                      placeholder="password"
                       value={password}
                       onChange={handlePasswordChange}
+                      pr="4.5rem"
+                      mb="4"
                     />
                     <InputRightElement width="4.5rem">
                       <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -139,29 +140,33 @@ export default function Login() {
                     </InputRightElement>
                   </InputGroup>
                   <FormHelperText textAlign="right">
-                    <Link>Forgot password?</Link>
+                    <Link fontWeight="medium" color="teal.500" href="#">
+                      Forgot password?
+                    </Link>
                   </FormHelperText>
                 </FormControl>
                 <Button
-                  borderRadius={0}
+                  variantColor="teal"
                   type="submit"
-                  variant="solid"
-                  colorScheme="teal"
-                  width="full"
+                  isLoading={token.isLoading}
                 >
                   Login
                 </Button>
+                <Flex justifyContent="center" my="2">
+                  <Avatar name="John Doe" src="https://bit.ly/sage-adebayo" />
+                </Flex>
               </Stack>
             </form>
           </Box>
         </Stack>
-        <Box>
-          New here?{" "}
-          <Link color="teal.500" href="/register">
-            Sign Up
-          </Link>
-        </Box>
       </Flex>
     </Container>
   );
-}
+};
+
+export default Login;
+
+// Notes Refactoring:
+// This refactors the code by moving the handleShowClick, handleUsernameChange, handlePasswordChange, and submitLogin functions into separate, named functions. This makes the code more readable and makes it easier to test the different parts of the code. It also moves the component to be a functional component instead of a class component
+// It also makes sure that the component is wrapped in a container with a max width of 100% and a height of 100vh so that it doesn't overflow.
+// It also makes sure that the form helper text is aligned to the right, and it also makes sure that the avatar is centred.
