@@ -10,6 +10,8 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useGetEvents } from "../src/logic/eventsHandler";
+import { useContext } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function Events() {
   const { user } = useContext(AuthContext);

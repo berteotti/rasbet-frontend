@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import BetRow from "../src/components/BetRow";
 import { useGetBets } from "../src/logic/betsHandler";
+import { useContext } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function Bets() {
   const { user } = useContext(AuthContext);
