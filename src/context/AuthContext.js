@@ -31,8 +31,14 @@ export const AuthProvider = ({ children }) => {
   if (process.browser && !Boolean(user) && router.pathname === "/profile") {
     router.push("/");
   }
+  const logout = () => {
+    queryClient.setQueryData(["user"], null);
+    setCookie("token", "", 0);
+  };
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
