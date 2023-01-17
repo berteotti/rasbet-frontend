@@ -12,9 +12,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import BetRow from "../src/components/BetRow";
 import { getEvents } from "../src/api/api";
+import { AuthContext } from "../src/context/AuthContext";
+import { useContext } from "react";
 
 export default function Events() {
-  const user = queryClient.getQueryData(["user"]);
+  const { user } = useContext(AuthContext);
 
   const { data: events } = useQuery({
     queryKey: ["events"],
