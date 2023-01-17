@@ -1,6 +1,6 @@
 import Head from "next/head";
-import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import { queryClient } from "../../src/query";
+import Header from "../../src/components/Header";
 import {
     Button,
     Container,
@@ -21,9 +21,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getGame } from "../../src/api/api";
 import { useRouter } from "next/router";
-import GameInfo from "../src/components/GameInfo";
+import GameInfo from "../../src/components/GameInfo";
 
 export default function Games() {
+    //const { home_team, away_team } = game;
     const user = queryClient.getQueryData(["user"]);
 
     // Add a variable for the game ID
@@ -58,17 +59,24 @@ export default function Games() {
                 <HStack spacing={6} align="flex-start">
                     <Flex direction="column" flex="1" padding="4" rounded="lg">
                         <Heading as="h3" size="lg" marginBottom="4">
-                            Games
+                            Game Information
                         </Heading>
                         <VStack spacing={4}>
-                            {game && game.results ? (
-                                game.results?.map((game) => (
-                                    <Box w="full" key={game.id}>
-                                        <GameInfo game={game} setBets={setBets} bets={bets} />
-                                    </Box>
-                                ))
+                            {game ? (
+                                //game.results ?(
+                                //game.results?.map((game) => (
+                                <Box w="full" key={game.id}>    
+                                    <div>Equipa da casa: {game.home_team} </div>
+                                    <div>Equipa de fora:{game.away_team}</div>
+                                    <div>Data de começo: {game.commence_time}</div>
+                                </Box>
+                                
+                                 //<GameInfo game={game} setBets={setBets} bets={bets} />
+                                //):(
+                                    //<p>No results found for this game</p>
+                                //</Flex>)
                             ) : (
-                                <p>No games</p>
+                                <p>Error finding game</p>
                             )}
                         </VStack>
                     </Flex>

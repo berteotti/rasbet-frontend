@@ -5,7 +5,7 @@ import { getBookmakers, getOutcomes } from "../api/api";
 import { queryClient } from "../query";
 import Link from "next/link";
 
-export default function GameRow({ game, setBets, bets }) {
+export default function GameRow({ outcome }) {
   const { home_team, away_team } = game;
 
   const { data: bookmaker } = useQuery({
