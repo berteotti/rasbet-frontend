@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { queryClient } from "../src/query";
 import styles from "../styles/Home.module.css";
-import Header from "../src/components/Header";
+import Header from "../src/components/header";
 import {
   createBet,
   getGames,
@@ -27,7 +27,6 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { getCookie, setCookie } from "../src/cookie";
 import GameRow from "../src/components/GameRow";
 import { useContext, useState } from "react";
 import { FaTrash } from "react-icons/fa";

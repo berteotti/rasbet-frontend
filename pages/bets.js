@@ -1,36 +1,22 @@
 import Head from "next/head";
 import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import Header from "../src/components/header";
 import {
-  Button,
   Container,
   Flex,
   Heading,
   VStack,
   Box,
   HStack,
-  IconButton,
-  Input,
-  Stack,
-  useDisclosure,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  CloseButton,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { getBets } from "../src/api/api";
 import BetRow from "../src/components/BetRow";
-import { AuthContext } from "../src/context/AuthContext";
+import { useGetBets } from "../src/logic/betsHandler";
 import { useContext } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function Bets() {
   const { user } = useContext(AuthContext);
-
-  const { data: bets } = useQuery({
-    queryKey: ["bets"],
-    queryFn: () => getBets(),
-  });
+  const bets = useGetBets();
 
   return (
     <Container

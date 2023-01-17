@@ -35,7 +35,8 @@ import { updateUser, updateWallet } from "../src/api/api";
 import { getWallet } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import { useUpdateUser, useMutateUser } from "../src/logic/profileHandler";
+import Header from "../src/components/header";
 import { AuthContext } from "../src/context/AuthContext";
 
 const IconUser = chakra(FaUserAlt);
@@ -45,20 +46,28 @@ const IconName = chakra(FaRegUser);
 export default function Profile() {
   const { user } = useContext(AuthContext);
 
-  const mutation = useMutation(
-    () =>
-      updateUser({
-        id: user.id,
-        email,
-        username,
-        first_name: firstName,
-        last_name: lastName,
-      }),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData(["user"], data);
-      },
-    }
+  const {
+    username,
+    firstName,
+    lastName,
+    email,
+    amount,
+    defAmount,
+    handleUsernameChange,
+    handleFirstNameChange,
+    handleLastNameChange,
+    handleEmailChange,
+    incrementAmount,
+    handleSum,
+    handleDec,
+    handleWallet,
+  } = useUpdateUser(user);
+  const mutation = useMutateUser(
+    user?.id,
+    email,
+    username,
+    firstName,
+    lastName
   );
 
   const { data: newWallet } = useQuery({
@@ -66,7 +75,7 @@ export default function Profile() {
     queryFn: () => getWallet({ id: user?.wallet }),
     enabled: Boolean(user),
     onSuccess: (data) => {
-      setSum(data.balance);
+      handleWallet(data.balance);
     },
     onError: (err) => {
       console.log(err);
@@ -86,27 +95,7 @@ export default function Profile() {
     }
   );
 
-  const [username, setUsername] = useState(user?.username);
-  const [firstName, setFirstName] = useState(user?.first_name);
-  const [lastName, setLastnName] = useState(user?.last_name);
-  const [email, setEmail] = useState(user?.email);
-  const [amount, setAmount] = useState(0);
-  const [defAmount, setSum] = useState(0);
-
-  const handleUsernameChange = (event) => setUsername(event.target.value);
-  const handleFirstNameChange = (event) => setFirstName(event.target.value);
-  const handleLastNameChange = (event) => setLastnName(event.target.value);
-  const handleEmailChange = (event) => setEmail(event.target.value);
-  const incrementAmount = (event) => setAmount(event.target.value);
-  const handleSum = () => setSum(Number(defAmount) + Number(amount));
-  const handleDec = () => {
-    if (Number(defAmount) === 0) {
-      window.alert("Não possui dinheiro na conta.");
-    } else if (Number(amount) > Number(defAmount)) {
-      window.alert("Quantia excede o valor que está na conta.");
-    } else setSum(Number(defAmount) - Number(amount));
-  };
-
+  //UI
   return (
     <Container
       maxW="100%"

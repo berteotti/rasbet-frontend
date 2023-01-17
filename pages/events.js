@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import Header from "../src/components/header";
 import {
   Container,
   Flex,
@@ -9,19 +9,13 @@ import {
   Box,
   HStack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import BetRow from "../src/components/BetRow";
-import { getEvents } from "../src/api/api";
-import { AuthContext } from "../src/context/AuthContext";
+import { useGetEvents } from "../src/logic/eventsHandler";
 import { useContext } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function Events() {
   const { user } = useContext(AuthContext);
-
-  const { data: events } = useQuery({
-    queryKey: ["events"],
-    queryFn: () => getEvents(),
-  });
+  const events = useGetEvents();
 
   return (
     <Container

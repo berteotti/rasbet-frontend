@@ -1,6 +1,6 @@
 import { HStack, Button, Flex, VStack, Text, Box } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useContext } from "react";
 import { getBookmakers, getOutcomes, updateOutcome } from "../api/api";
 import { queryClient } from "../query";
 import { useState } from "react";
@@ -17,9 +17,10 @@ import {
   InputGroup,
   FormControl,
 } from "@chakra-ui/react";
+import { AuthContext } from "../context/AuthContext";
 
 const Outcomes = ({ bookmaker }) => {
-  const user = queryClient.getQueryData(["user"]);
+  const { user } = useContext(AuthContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [newMultiplier, setMultiplier] = useState("");

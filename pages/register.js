@@ -21,7 +21,8 @@ import { FaUserAlt, FaLock, FaAt, FaRegUser } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { register } from "../src/api/api";
 import { useRouter } from "next/router";
-import Header from "../src/components/Header";
+import {useUpdateRegister, refetch, useRefetch} from "../src/logic/registerHandler";
+import Header from "../src/components/header";
 
 const IconUser = chakra(FaUserAlt);
 const IconPass = chakra(FaLock);
@@ -30,35 +31,21 @@ const IconName = chakra(FaRegUser);
 
 export default function Register() {
   const router = useRouter();
+  const {
+    showPassword,
+    username,
+    password,
+    firstName,
+    lastName,
+    email,
+    handleUsernameChange,
+    handlePasswordChange,
+    handlefnameChange,
+    handlelnameChange,
+    handleemailChange,
+    handleClick, } = useUpdateRegister();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastnName] = useState("");
-  const [email, setEmail] = useState("");
-
-  const { refetch } = useQuery({
-    queryKey: [],
-    queryFn: () =>
-      register({
-        username,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-      }),
-    enabled: false,
-    onSuccess: () => router.push("/"),
-  });
-
-  const handleUsernameChange = (event) => setUsername(event.target.value);
-  const handlePasswordChange = (event) => setPassword(event.target.value);
-  const handlefnameChange = (event) => setFirstName(event.target.value);
-  const handlelnameChange = (event) => setLastnName(event.target.value);
-  const handleemailChange = (event) => setEmail(event.target.value);
-
-  const handleClick = () => setShowPassword(!showPassword);
+  const refetch = useRefetch(username, firstName, lastName, email, password);
 
   const submitRegister = (event) => {
     refetch();
