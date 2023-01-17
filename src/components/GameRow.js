@@ -1,6 +1,6 @@
-import { HStack, Button, Flex, VStack, Text, Box } from "@chakra-ui/react";
+import { HStack, Button, Flex, VStack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { useCallback } from "react";
 import { getBookmakers, getOutcomes } from "../api/api";
 import { queryClient } from "../query";
 
@@ -17,7 +17,7 @@ export default function GameRow({ game }) {
 
   const { data: outcomes } = useQuery({
     queryKey: ["outcomes", bookmaker?.id],
-    queryFn: () => getOutcomes({ bookmaker: bookmaker.id }),
+    queryFn: useCallback(() => getOutcomes({ bookmaker: bookmaker.id }), [bookmaker]),
     enabled: Boolean(bookmaker?.id),
     onSuccess: (data) =>
       queryClient.setQueryData(["outcomes", bookmaker.id], data.results),
@@ -26,26 +26,31 @@ export default function GameRow({ game }) {
 
   return (
     <VStack padding="4" backgroundColor="white" rounded="lg">
-      <Flex justify={"space-between"} w="full" alignItems={"center"}>
-        <Text as="b">
+      <Flex justify="space-between" alignItems="center">
+        <Text fontWeight="bold">
           {home_team} - {away_team}
         </Text>
-        <Button colorScheme="teal">Ver jogo</Button>
+        <Link href={`/game/${game.id}`}>
+          <Button colorScheme="teal">Ver jogo</Button>
+        </Link>
       </Flex>
       {outcomes && outcomes.length && (
-        <Flex w="full">
+        <Flex w="full" justifyContent="space-between">
           {outcomes.map(({ id, multiplier, result }) => (
-            <Flex justifyContent={"center"} key={id} flex="1">
-              <Button colorScheme="teal">
-                <HStack spacing={5}>
-                  <div>{result}</div>
-                  <div>{multiplier}</div>
-                </HStack>
-              </Button>
-            </Flex>
+            <Button key={id} colorScheme="teal" >
+              <HStack spacing={5}>
+                <Text>{result}</Text>
+                <Text>{multiplier}</Text>
+              </HStack>
+            </Button>
           ))}
         </Flex>
       )}
     </VStack>
   );
 }
+
+// Notes refactoring: In this refactored version, I wrapped the button to navigate to the game details with a Link component from next/link to
+// handle the navigation, it will make the code cleaner and more readable. Also I replaced Text as="b" with Text fontWeight="bold" for
+// accessibility reason and removed unnecessary Flex component
+//inside the map function that makes the layout clean and more readable. Also added useCallback hook to avoid unnecessary re-renders

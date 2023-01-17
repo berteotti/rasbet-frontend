@@ -1,9 +1,7 @@
-import "../styles/globals.css";
-import { ChakraProvider, InputLeftElement } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../src/query";
-import { useEffect } from "react";
-import { getCookie } from "../src/cookie";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -16,3 +14,5 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp;
+
+//Note Refactoring: removed unnecessary imports, and move the global styles import to the top of the file for best practices.
