@@ -1,11 +1,14 @@
 import { Button, Flex, HStack, Spacer } from "@chakra-ui/react";
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
 import { queryClient } from "../query";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { AuthContext } from "../context/AuthContext";
 
-export default function Header({ user }) {
+export default function Header() {
+  const { user } = useContext(AuthContext);
+
   return (
     <Flex justify="space-between" alignItems={"center"}>
       <Link href="/">

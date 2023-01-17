@@ -29,29 +29,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getCookie, setCookie } from "../src/cookie";
 import GameRow from "../src/components/GameRow";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function Home() {
-  const user = queryClient.getQueryData(["user"]);
-  const token = process.browser ? getCookie("token") : null;
-
-  const { data } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser(token),
-    enabled: Boolean(token) && !Boolean(user),
-    onSuccess: (data) => {
-      if (data && data.results) {
-        queryClient.setQueryData(["user"], data.results[0]);
-      }
-    },
-    onError: () => {
-      if (token) {
-        setCookie("token", "", 0);
-      }
-    },
-  });
-
+  const { user } = useContext(AuthContext);
   const { data: games } = useQuery({
     queryKey: ["games"],
     queryFn: () => getGames(),

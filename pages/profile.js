@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Flex,
   Heading,
@@ -36,18 +36,14 @@ import { getWallet } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
 import Header from "../src/components/Header";
+import { AuthContext } from "../src/context/AuthContext";
 
 const IconUser = chakra(FaUserAlt);
 const IconMail = chakra(FaAt);
 const IconName = chakra(FaRegUser);
 
 export default function Profile() {
-  const router = useRouter();
-  const user = queryClient.getQueryData(["user"]);
-
-  if (process.browser && !Boolean(user)) {
-    router.push("/");
-  }
+  const { user } = useContext(AuthContext);
 
   const mutation = useMutation(
     () =>
