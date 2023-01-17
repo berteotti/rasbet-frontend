@@ -79,7 +79,7 @@ export const getGames = (data) =>
     method: "GET",
   });
 
-export const getgame = (data) =>
+export const getGame = (data) =>
   rasbetFetch(`/games/${data.id}/`, {
     method: "GET",
   });
@@ -103,6 +103,12 @@ export const getOutcomes = (data) =>
 export const getOutcome = (data) =>
   rasbetFetch(`/outcomes/${data.id}/`, {
     method: "GET",
+  });
+
+export const updateOutcome = (data) =>
+  rasbetFetch(`/outcomes/${data.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
   });
 
 export const getBetOutcomes = (data) =>
