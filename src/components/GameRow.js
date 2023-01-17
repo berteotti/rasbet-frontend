@@ -30,7 +30,12 @@ export default function GameRow({ game, setBets, bets }) {
         <Text as="b">
           {home_team} - {away_team}
         </Text>
-        <Button colorScheme="teal">Ver jogo</Button>
+        <Button
+          as={Link}
+          href={`/games/${game.id}`}
+          colorScheme="teal">
+          Ver jogo
+        </Button>
       </Flex>
       {outcomes && outcomes.length && (
         <Flex w="full">

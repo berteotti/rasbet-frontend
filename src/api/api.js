@@ -85,7 +85,7 @@ export const getGames = (data) =>
     method: "GET",
   });
 
-export const getgame = (data) =>
+export const getGame = (data) =>
   rasbetFetch(`/games/${data.id}/`, {
     method: "GET",
   });
@@ -126,4 +126,15 @@ export const updateWallet = (data) =>
   rasbetFetch(`/wallets/${data.id}/`, {
     method: "PATCH",
     body: JSON.stringify(data),
+  });
+
+// events
+export const getEvents = (data) =>
+  rasbetFetch(`/events/`, {
+    method: "GET",
+  });
+
+export const getEvent = (data) =>
+  rasbetFetch(`/events/${data.id}/`, {
+    method: "GET",
   });
