@@ -35,49 +35,64 @@ import { updateUser, updateWallet } from "../src/api/api";
 import { getWallet } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
-import {useUpdateUser,useMutateUser} from "../src/logic/profileHandler";
+import { useUpdateUser, useMutateUser } from "../src/logic/profileHandler";
 import Header from "../src/components/header";
 
 const IconUser = chakra(FaUserAlt);
 const IconMail = chakra(FaAt);
 const IconName = chakra(FaRegUser);
 
-
 export default function Profile() {
-
-  const router = useRouter();
   const user = queryClient.getQueryData(["user"]);
 
-  const { username , firstName, lastName, email, amount,defAmount,
-    handleUsernameChange, handleFirstNameChange, handleLastNameChange, handleEmailChange, incrementAmount , handleSum, handleDec, handleWallet} = useUpdateUser(user);
-  const mutation = useMutateUser(user?.id, email, username, firstName, lastName);
+  const {
+    username,
+    firstName,
+    lastName,
+    email,
+    amount,
+    defAmount,
+    handleUsernameChange,
+    handleFirstNameChange,
+    handleLastNameChange,
+    handleEmailChange,
+    incrementAmount,
+    handleSum,
+    handleDec,
+    handleWallet,
+  } = useUpdateUser(user);
+  const mutation = useMutateUser(
+    user?.id,
+    email,
+    username,
+    firstName,
+    lastName
+  );
 
-    const { data: newWallet } = useQuery({
-      queryKey: ["wallet"],
-      queryFn: () => getWallet({ id: user?.wallet }),
-      enabled: Boolean(user),
+  const { data: newWallet } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: () => getWallet({ id: user?.wallet }),
+    enabled: Boolean(user),
+    onSuccess: (data) => {
+      handleWallet(data.balance);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const walletMutation = useMutation(
+    () =>
+      updateWallet({
+        id: newWallet.id,
+        balance: defAmount,
+      }),
+    {
       onSuccess: (data) => {
-        handleWallet(data.balance);
+        queryClient.setQueryData(["wallet"], data);
       },
-      onError: (err) => {
-        console.log(err);
-      },
-    });
-
-    const walletMutation = useMutation(
-        () =>
-            updateWallet({
-              id: newWallet.id,
-              balance: defAmount,
-            }),
-        {
-          onSuccess: (data) => {
-            queryClient.setQueryData(["wallet"], data);
-          },
-        }
-    );
-
-
+    }
+  );
 
   //UI
   return (
@@ -249,7 +264,6 @@ export default function Profile() {
                 onSubmit={(event) => {
                   event.preventDefault();
                   mutation.mutate();
-
                 }}
               >
                 <Stack
