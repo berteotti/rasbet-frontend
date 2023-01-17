@@ -3,7 +3,12 @@ import Link from "next/link";
 import { queryClient } from "../src/query";
 import styles from "../styles/Home.module.css";
 import Header from "../src/components/header";
-import { createBet, getGames, getUser } from "../src/api/api";
+import {
+  createBet,
+  getGames,
+  getGameSubscriber,
+  getUser,
+} from "../src/api/api";
 import {
   Button,
   Container,
@@ -51,6 +56,10 @@ export default function Home() {
     queryKey: ["games"],
     queryFn: () => getGames(),
   });
+  const { data: gameSubscribers } = useQuery({
+    queryKey: ["game_subscriber"],
+    queryFn: () => getGameSubscriber(),
+  });
   const initialBetState = {
     loading: false,
     error: false,
@@ -71,125 +80,132 @@ export default function Home() {
       user: user.id,
       outcomes: bets.map(({ id }) => id),
     })
-      .then(() => {
-        setBetState({ ...initialBetState, success: true });
-        setBets([]);
-      })
-      .catch(() => {
-        setBetState({ ...initialBetState, error: true });
-      });
+        .then(() => {
+          setBetState({ ...initialBetState, success: true });
+          setBets([]);
+        })
+        .catch(() => {
+          setBetState({ ...initialBetState, error: true });
+        });
   };
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Container
-      maxW="100%"
-      paddingY="6"
-      backgroundColor="gray.200"
-      width="100wh"
-      height="100vh"
-      overflow="auto"
-    >
-      <Head>
-        <title>RASBet</title>
-        <meta name="description" content="Best odds only with RASBet" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <header>
-        <Header user={user} />
-      </header>
-      <main>
-        <HStack spacing={6} align="flex-start">
-          <Flex direction="column" flex="1" padding="4" rounded="lg">
-            <Heading as="h3" size="lg" marginBottom="4">
-              Games
-            </Heading>
-            <VStack spacing={4}>
-              {games && games.results ? (
-                games.results?.map((game) => (
-                  <Box w="full" key={game.id}>
-                    <GameRow game={game} setBets={setBets} bets={bets} />
-                  </Box>
-                ))
-              ) : (
-                <p>No games</p>
-              )}
-            </VStack>
-          </Flex>
-          <Flex
-            direction="column"
-            minW="200px"
-            padding="4"
-            background="white"
-            rounded="lg"
-          >
-            <Heading as="h3" size="lg" marginBottom="4">
-              Bets
-            </Heading>
-            {bets?.length > 0 ? (
-              <Stack>
-                {bets.map(({ id, result, multiplier, game }) => (
-                  <div key={id}>
-                    <HStack justify="space-between">
-                      <div>
-                        <div>
-                          {game.home_team} - {game.away_team}
-                        </div>
-                        <div>
-                          {result} - {multiplier}
-                        </div>
-                      </div>
-                      <IconButton
-                        icon={<FaTrash />}
-                        onClick={() =>
-                          setBets((oldBets) =>
-                            oldBets.filter(({ id: betId }) => id !== betId)
-                          )
-                        }
-                      />
-                    </HStack>
-                  </div>
-                ))}
-                Odd: {odd}
-                <Input
-                  value={stake}
-                  onChange={(event) => setStake(event.target.value)}
-                />
-                {user ? (
-                  <Button loading={betState.loading} onClick={submitBet}>
-                    Submit bet
-                  </Button>
+      <Container
+          maxW="100%"
+          paddingY="6"
+          backgroundColor="gray.200"
+          width="100wh"
+          height="100vh"
+          overflow="auto"
+      >
+        <Head>
+          <title>RASBet</title>
+          <meta name="description" content="Best odds only with RASBet" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <header>
+          <Header user={user} />
+        </header>
+        <main>
+          <HStack spacing={6} align="flex-start">
+            <Flex direction="column" flex="1" padding="4" rounded="lg">
+              <Heading as="h3" size="lg" marginBottom="4">
+                Jogos
+              </Heading>
+              <VStack spacing={4}>
+                {games && games.results ? (
+                    games.results?.map((game) => (
+                        <Box w="full" key={game.id}>
+                          <GameRow
+                              game={game}
+                              setBets={setBets}
+                              bets={bets}
+                              subscription={gameSubscribers?.results.find(
+                                  (gameSubscriber) => gameSubscriber.game === game.id
+                              )}
+                          />
+                        </Box>
+                    ))
                 ) : (
-                  <Button as={Link} href="/login">
-                    Login to submit bet
-                  </Button>
+                    <p>Sem jogos</p>
                 )}
-                {betState.error && <p>Something went wrong</p>}
-              </Stack>
-            ) : (
-              <>
-                <p>No bet</p>
-                {betState.success && isVisible && (
-                  <Alert status="success">
-                    <AlertIcon />
-                    <AlertTitle>Bet successfuly submitted!</AlertTitle>
-                    <CloseButton
-                      alignSelf="flex-start"
-                      position="relative"
-                      right={-1}
-                      top={-1}
-                      onClick={onClose}
+              </VStack>
+            </Flex>
+            <Flex
+                direction="column"
+                minW="200px"
+                padding="4"
+                background="white"
+                rounded="lg"
+            >
+              <Heading as="h3" size="lg" marginBottom="4">
+                Apostas
+              </Heading>
+              {bets?.length > 0 ? (
+                  <Stack>
+                    {bets.map(({ id, result, multiplier, game }) => (
+                        <div key={id}>
+                          <HStack justify="space-between">
+                            <div>
+                              <div>
+                                {game.home_team} - {game.away_team}
+                              </div>
+                              <div>
+                                {result} - {multiplier}
+                              </div>
+                            </div>
+                            <IconButton
+                                icon={<FaTrash />}
+                                onClick={() =>
+                                    setBets((oldBets) =>
+                                        oldBets.filter(({ id: betId }) => id !== betId)
+                                    )
+                                }
+                            />
+                          </HStack>
+                        </div>
+                    ))}
+                    Odd: {odd}
+                    <Input
+                        value={stake}
+                        onChange={(event) => setStake(event.target.value)}
                     />
-                  </Alert>
-                )}
-              </>
-            )}
-          </Flex>
-        </HStack>
-      </main>
+                    {user ? (
+                        <Button loading={betState.loading} onClick={submitBet}>
+                          Submeter aposta
+                        </Button>
+                    ) : (
+                        <Button as={Link} href="/login">
+                          Entrar para submeter aposta
+                        </Button>
+                    )}
+                    {betState.error && <p>Algo correu mal</p>}
+                  </Stack>
+              ) : (
+                  <>
+                    <p>Sem apostas!</p>
+                    {betState.success && isVisible && (
+                        <Alert status="success">
+                          <AlertIcon />
+                          <AlertTitle>Aposta submetida com sucesso!</AlertTitle>
+                          <CloseButton
+                              alignSelf="flex-start"
+                              position="relative"
+                              right={-1}
+                              top={-1}
+                              onClick={onClose}
+                          />
+                        </Alert>
+                    )}
+                  </>
+              )}
+            </Flex>
+          </HStack>
+        </main>
 
-      <footer></footer>
-    </Container>
+        <footer></footer>
+      </Container>
   );
 }
