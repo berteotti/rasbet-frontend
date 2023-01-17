@@ -4,9 +4,10 @@ import React from "react";
 import { getBookmakers, getOutcomes } from "../api/api";
 import { queryClient } from "../query";
 
-export default function GameRow({ game, setBets, bets }) {
-    const { home_team, away_team } = game;
+export default function GameInfo({ game}) {
+    const user = queryClient.getQueryData(["user"]);
 
+    const { home_team, away_team } = game;
     const { data: bookmaker } = useQuery({
         queryKey: ["bookmaker", game.id],
         queryFn: () => getBookmakers({ game: game.id }),
@@ -26,30 +27,14 @@ export default function GameRow({ game, setBets, bets }) {
 
     return (
         <VStack padding="4" backgroundColor="white" rounded="lg">
-            <Flex justify={"space-between"} w="full" alignItems={"center"}>
-                <Text as="b">
-                    {home_team} - {away_team}
-                </Text>
-                <Button
-                    as={Link}
-                    href={`/games/${game.id}`}
-                    colorScheme="teal">
-                    Ver jogo
-                </Button>
-            </Flex>
             {outcomes && outcomes.length && (
                 <Flex w="full">
                     {outcomes.map(({ id, multiplier, result }) => (
                         <Flex justifyContent={"center"} key={id} flex="1">
                             <Button
-                                disabled={bets.find(({ game: { id } }) => id === game.id)}
+            
                                 colorScheme="teal"
-                                onClick={() =>
-                                    setBets((oldBets) => [
-                                        ...oldBets,
-                                        { id, result: result, multiplier, game: game },
-                                    ])
-                                }
+
                             >
                                 <HStack spacing={5}>
                                     <div>{result}</div>

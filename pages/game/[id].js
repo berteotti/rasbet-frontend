@@ -65,13 +65,15 @@ export default function Games() {
                             {game ? (
                                 //game.results ?(
                                 //game.results?.map((game) => (
+                                <div>
                                 <Box w="full" key={game.id}>    
                                     <div>Equipa da casa: {game.home_team} </div>
                                     <div>Equipa de fora:{game.away_team}</div>
                                     <div>Data de começo: {game.commence_time}</div>
                                 </Box>
                                 
-                                 //<GameInfo game={game} setBets={setBets} bets={bets} />
+                                 <GameInfo game={game} />
+                                 </div>
                                 //):(
                                     //<p>No results found for this game</p>
                                 //</Flex>)
