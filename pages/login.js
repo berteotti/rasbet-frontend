@@ -25,13 +25,10 @@ import { setCookie } from "../src/cookie";
 import { queryClient } from "../src/query";
 import Header from "../src/components/header";
 
-
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-
 export const useUpdateLogin = () => {
-
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -41,17 +38,27 @@ export const useUpdateLogin = () => {
   const handleUsernameChange = (event) => setUsername(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
 
-  return {showPassword,username,password, handleShowClick,handleUsernameChange,handlePasswordChange};
+  return {
+    showPassword,
+    username,
+    password,
+    handleShowClick,
+    handleUsernameChange,
+    handlePasswordChange,
+  };
 };
-
-
 
 export default function Login() {
   const router = useRouter();
 
-
-  const {showPassword,username,password, handleShowClick,handleUsernameChange,handlePasswordChange} =  useUpdateLogin();
-
+  const {
+    showPassword,
+    username,
+    password,
+    handleShowClick,
+    handleUsernameChange,
+    handlePasswordChange,
+  } = useUpdateLogin();
 
   const { data, refetch: fetchUser } = useQuery({
     queryKey: ["user"],
@@ -74,7 +81,6 @@ export default function Login() {
       fetchUser();
     },
   });
-
 
   const submitLogin = (event) => {
     refetch();
