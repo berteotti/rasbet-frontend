@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import Header from "../src/components/header";
 import {
   Button,
   Container,

@@ -21,7 +21,7 @@ import { FaUserAlt, FaLock, FaAt, FaRegUser } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { register } from "../src/api/api";
 import { useRouter } from "next/router";
-import Header from "../src/components/Header";
+import Header from "../src/components/header";
 
 const IconUser = chakra(FaUserAlt);
 const IconPass = chakra(FaLock);
