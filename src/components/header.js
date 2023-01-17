@@ -5,9 +5,10 @@ import { queryClient } from "../query";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { AuthContext } from "../context/AuthContext";
+import { setCookie } from "../cookie";
 
 export default function Header() {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <Flex justify="space-between" alignItems={"center"}>
@@ -53,6 +54,9 @@ export default function Header() {
           </Button>
           <Button as={Link} href="/profile" colorScheme="teal">
             {user.username}
+          </Button>
+          <Button onClick={logout} colorScheme="teal">
+            Logout
           </Button>
         </HStack>
       )}
