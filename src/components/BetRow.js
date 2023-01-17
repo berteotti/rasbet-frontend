@@ -31,16 +31,18 @@ export default function BetRow({ bet }) {
     onError: console.log,
   });
 
-  return (
+  return betOutcomes?.length > 0 ? (
     <div>
       {betOutcomes.length > 1 ? `Multiple (${betOutcomes.length})` : "Simple"}
-      <p>Status: {bet.status}</p>
+      <p>Estado: {bet.status}</p>
       <p>Odd: {bet.multiplier}</p>
-      <p>Paied: {bet.stake}€</p>
-      <p>Prize: {bet.prize}</p>
+      <p>Pago: {bet.stake}€</p>
+      <p>Prémio: {bet.prize}</p>
       {betOutcomes?.map(({ outcome }) => (
         <OutcomeRow outcomeId={outcome} key={outcome} />
       ))}
     </div>
+  ) : (
+    <div>Sem info da aposta</div>
   );
 }

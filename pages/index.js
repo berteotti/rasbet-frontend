@@ -3,7 +3,12 @@ import Link from "next/link";
 import { queryClient } from "../src/query";
 import styles from "../styles/Home.module.css";
 import Header from "../src/components/Header";
-import { createBet, getGames, getUser } from "../src/api/api";
+import {
+  createBet,
+  getGames,
+  getGameSubscriber,
+  getUser,
+} from "../src/api/api";
 import {
   Button,
   Container,
@@ -50,6 +55,10 @@ export default function Home() {
   const { data: games } = useQuery({
     queryKey: ["games"],
     queryFn: () => getGames(),
+  });
+  const { data: gameSubscribers } = useQuery({
+    queryKey: ["game_subscriber"],
+    queryFn: () => getGameSubscriber(),
   });
   const initialBetState = {
     loading: false,
@@ -103,17 +112,24 @@ export default function Home() {
         <HStack spacing={6} align="flex-start">
           <Flex direction="column" flex="1" padding="4" rounded="lg">
             <Heading as="h3" size="lg" marginBottom="4">
-              Games
+              Jogos
             </Heading>
             <VStack spacing={4}>
               {games && games.results ? (
                 games.results?.map((game) => (
                   <Box w="full" key={game.id}>
-                    <GameRow game={game} setBets={setBets} bets={bets} />
+                    <GameRow
+                      game={game}
+                      setBets={setBets}
+                      bets={bets}
+                      subscription={gameSubscribers?.results.find(
+                        (gameSubscriber) => gameSubscriber.game === game.id
+                      )}
+                    />
                   </Box>
                 ))
               ) : (
-                <p>No games</p>
+                <p>Sem jogos</p>
               )}
             </VStack>
           </Flex>
@@ -125,7 +141,7 @@ export default function Home() {
             rounded="lg"
           >
             <Heading as="h3" size="lg" marginBottom="4">
-              Bets
+              Apostas
             </Heading>
             {bets?.length > 0 ? (
               <Stack>
@@ -158,22 +174,22 @@ export default function Home() {
                 />
                 {user ? (
                   <Button loading={betState.loading} onClick={submitBet}>
-                    Submit bet
+                    Submeter aposta
                   </Button>
                 ) : (
                   <Button as={Link} href="/login">
-                    Login to submit bet
+                    Entrar para submeter aposta
                   </Button>
                 )}
-                {betState.error && <p>Something went wrong</p>}
+                {betState.error && <p>Algo correu mal</p>}
               </Stack>
             ) : (
               <>
-                <p>No bet</p>
+                <p>Sem apostas!</p>
                 {betState.success && isVisible && (
                   <Alert status="success">
                     <AlertIcon />
-                    <AlertTitle>Bet successfuly submitted!</AlertTitle>
+                    <AlertTitle>Aposta submetida com sucesso!</AlertTitle>
                     <CloseButton
                       alignSelf="flex-start"
                       position="relative"

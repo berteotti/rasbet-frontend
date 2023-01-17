@@ -34,11 +34,19 @@ export default function Header({ user }) {
         <HStack>
           <Button
             as={Link}
+            href="/events"
+            colorScheme="teal"
+            textTransform="uppercase"
+          >
+            Eventos
+          </Button>
+          <Button
+            as={Link}
             href="/bets"
             colorScheme="teal"
             textTransform="uppercase"
           >
-            My bets
+            Apostas
           </Button>
           <Button as={Link} href="/profile" colorScheme="teal">
             {user.username}

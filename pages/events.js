@@ -2,32 +2,23 @@ import Head from "next/head";
 import { queryClient } from "../src/query";
 import Header from "../src/components/Header";
 import {
-  Button,
   Container,
   Flex,
   Heading,
   VStack,
   Box,
   HStack,
-  IconButton,
-  Input,
-  Stack,
-  useDisclosure,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  CloseButton,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { getBets } from "../src/api/api";
 import BetRow from "../src/components/BetRow";
+import { getEvents } from "../src/api/api";
 
-export default function Bets() {
+export default function Events() {
   const user = queryClient.getQueryData(["user"]);
 
-  const { data: bets } = useQuery({
-    queryKey: ["bets"],
-    queryFn: () => getBets(),
+  const { data: events } = useQuery({
+    queryKey: ["events"],
+    queryFn: () => getEvents(),
   });
 
   return (
@@ -51,17 +42,17 @@ export default function Bets() {
         <HStack spacing={6} align="flex-start">
           <Flex direction="column" flex="1" padding="4" rounded="lg">
             <Heading as="h3" size="lg" marginBottom="4">
-              Apostas
+              Eventos
             </Heading>
             <VStack spacing={4}>
-              {bets?.results.length > 0 ? (
-                bets.results?.map((bet) => (
-                  <Box w="full" key={bet.id}>
-                    <BetRow bet={bet} />
+              {events?.results.length > 0 ? (
+                events.results?.map((event) => (
+                  <Box w="full" key={event.id}>
+                    {event.description}
                   </Box>
                 ))
               ) : (
-                <p>Sem apostas</p>
+                <p>Sem eventos</p>
               )}
             </VStack>
           </Flex>

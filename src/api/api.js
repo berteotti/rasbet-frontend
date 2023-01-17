@@ -1,5 +1,4 @@
 import { getCookie } from "../cookie";
-import { queryClient } from "../query";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -13,9 +12,10 @@ const rasbetFetch = (endpoint, options) => {
     },
     ...options,
   }).then((res) => {
-    if (res.status < 200 || res.status >= 300) throw res.json();
+    if (res.status < 200 || res.status >= 400) throw res?.json();
 
-    return res.json();
+    if (res.statusText === "OK") return res.json();
+    else return null;
   });
 };
 
@@ -24,9 +24,6 @@ export const login = (data) => {
   return rasbetFetch(`/login/`, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 };
 
@@ -34,9 +31,6 @@ export const register = (data) =>
   rasbetFetch(`/register/`, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
 export const getUser = () => {
@@ -111,7 +105,7 @@ export const getOutcome = (data) =>
     method: "GET",
   });
 
-  export const updateOutcome = (data) =>
+export const updateOutcome = (data) =>
   rasbetFetch(`/outcomes/${data.id}/`, {
     method: "PATCH",
     body: JSON.stringify(data),
@@ -121,8 +115,6 @@ export const getBetOutcomes = (data) =>
   rasbetFetch(`/bet_outcomes?bet=${data.bet}`, {
     method: "GET",
   });
-
-
 
 // wallets
 export const getWallet = (data) =>
@@ -136,13 +128,29 @@ export const updateWallet = (data) =>
     body: JSON.stringify(data),
   });
 
-// events
 export const getEvents = (data) =>
   rasbetFetch(`/events/`, {
     method: "GET",
   });
 
-export const getEvent = (data) =>
-  rasbetFetch(`/events/${data.id}/`, {
+export const updateEvents = (data) =>
+  rasbetFetch(`/events/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+
+export const getGameSubscriber = (data) =>
+  rasbetFetch(`/game_subscribers/`, {
     method: "GET",
+  });
+
+export const createGameSubscriber = (data) =>
+  rasbetFetch(`/game_subscribers/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const deleteGameSubscriber = (data) =>
+  rasbetFetch(`/game_subscribers/${data.id}`, {
+    method: "DELETE",
   });
