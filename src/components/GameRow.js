@@ -17,6 +17,7 @@ import {
   getOutcomes,
 } from "../api/api";
 import { queryClient } from "../query";
+import Link from "next/link";
 
 export default function GameRow({ game, setBets, bets, subscription }) {
   const { home_team, away_team } = game;
@@ -75,7 +76,17 @@ export default function GameRow({ game, setBets, bets, subscription }) {
               onClick={() => createMutation.mutate()}
             />
           )}
-          <Button colorScheme="teal">Ver jogo</Button>
+          user.is_staff ? (
+            <Button
+              as={Link}
+              href={`/bet/${bet.id}`}
+              colorScheme="teal">
+                Editar Odds
+            </Button>
+          ):(
+            <Button colorScheme="teal">Ver jogo</Button>
+          )
+          
         </HStack>
       </Flex>
       {outcomes && outcomes.length && (
