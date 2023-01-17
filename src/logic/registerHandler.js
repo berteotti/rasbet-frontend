@@ -3,6 +3,8 @@ import {useQuery} from "@tanstack/react-query";
 import {register} from "../api/api";
 import { useEffect } from 'react';
 import {router} from "next/client";
+
+//updates register info
 export const useUpdateRegister = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [username, setUsername] = useState("");
@@ -37,7 +39,7 @@ export const useUpdateRegister = () => {
 
 
 
-
+//registers user
 export const useRefetch = (username, firstName, lastName, email, password) => {
     const { refetch } = useQuery({
         queryKey: [],

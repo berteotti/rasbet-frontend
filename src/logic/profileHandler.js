@@ -3,6 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "../api/api";
 import { queryClient } from "../query";
 
+
+//mutates user info
 export const useMutateUser = (userId, email, username, firstName, lastName) => {
   return useMutation(
     () =>

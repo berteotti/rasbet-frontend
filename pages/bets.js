@@ -21,14 +21,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getBets } from "../src/api/api";
 import BetRow from "../src/components/BetRow";
+import {useGetBets} from "../src/logic/betsHandler";
 
 export default function Bets() {
   const user = queryClient.getQueryData(["user"]);
-
-  const { data: bets } = useQuery({
-    queryKey: ["bets"],
-    queryFn: () => getBets(),
-  });
+  const bets = useGetBets();
 
   return (
       <Container
