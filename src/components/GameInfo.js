@@ -44,7 +44,7 @@ const Outcomes = ({ bookmaker }) => {
       },
     }
   );
-  console.log(outcomes);
+
   return (
     outcomes &&
     outcomes.length && (
@@ -62,9 +62,7 @@ const Outcomes = ({ bookmaker }) => {
                 >
                   <HStack spacing={5}>
                     <div>{result}</div>
-                    <div>
-                      {multiplier} {id}
-                    </div>
+                    <div>{multiplier}</div>
                   </HStack>
                 </Button>
 
