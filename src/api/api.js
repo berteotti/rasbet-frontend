@@ -111,10 +111,18 @@ export const getOutcome = (data) =>
     method: "GET",
   });
 
+  export const updateOutcome = (data) =>
+  rasbetFetch(`/outcomes/${data.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+
 export const getBetOutcomes = (data) =>
   rasbetFetch(`/bet_outcomes?bet=${data.bet}`, {
     method: "GET",
   });
+
+
 
 // wallets
 export const getWallet = (data) =>

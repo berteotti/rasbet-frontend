@@ -3,8 +3,29 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { getBookmakers, getOutcomes } from "../api/api";
 import { queryClient } from "../query";
+import { useState } from "react";
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+    Input,
+    InputGroup,
+    FormControl,
+  } from '@chakra-ui/react'
 
 const Outcomes = ({bookmaker}) => {
+    const user = queryClient.getQueryData(["user"]);
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const [multiplier, setMultiplier] = useState(0);
+
+    const changeMultiplier = (event) => setMultiplier(event.target.value);
+
     const { data: outcomes } = useQuery({
         queryKey: ["outcomes", bookmaker?.id],
         queryFn: () => getOutcomes({ bookmaker: bookmaker.id }),
@@ -19,12 +40,52 @@ const Outcomes = ({bookmaker}) => {
             <Flex w="full">
                 {outcomes.map(({ id, multiplier, result }) => (
                     <Flex justifyContent={"center"} key={id} flex="1">
-                        <Button colorScheme="teal">
+                        {user?.is_staff ?  (
+                            <div>
+                            <Button colorScheme="teal" onClick={onOpen}>
+                                <HStack spacing={5}>
+                                    <div>{result}</div>
+                                    <div>{multiplier}</div>
+                                </HStack>
+                            </Button>
+
+                            <Modal isOpen={isOpen} onClose={onClose}>
+                                <ModalOverlay />
+                                <ModalContent>
+                                <ModalHeader>Alterar Odd</ModalHeader>
+                                <ModalCloseButton />
+                                <ModalBody>
+                                    
+                                </ModalBody>
+                                    <FormControl>
+                                        <InputGroup>
+                                        <Input
+                                            type="multiplier"
+                                            value={multiplier}
+                                            onChange={changeMultiplier}
+                                        />
+                                        </InputGroup>
+                                </FormControl>
+                                <ModalFooter>
+                                    <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                    
+                                    </Button>
+                                    <Button variant='ghost'>Secondary Action</Button>
+                                </ModalFooter>
+                                </ModalContent>
+                            </Modal>
+                            </div>
+                        ) : (
+                            <div>Sem User
+                            <Button colorScheme="teal">
                             <HStack spacing={5}>
+                                
                                 <div>{result}</div>
                                 <div>{multiplier}</div>
                             </HStack>
-                        </Button>
+                        </Button></div>
+                        )
+                        }
                     </Flex>
                 ))}
             </Flex>
@@ -33,7 +94,6 @@ const Outcomes = ({bookmaker}) => {
 }
 
 export default function GameInfo({ game}) {
-    const user = queryClient.getQueryData(["user"]);
 
     const { home_team, away_team } = game;
     const { data: bookmakers } = useQuery({
