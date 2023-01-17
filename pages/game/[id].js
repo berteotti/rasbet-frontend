@@ -19,9 +19,9 @@ import {
     CloseButton,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { getGames } from "../src/api/api";
-import GameRow from "../src/components/GameRow";
-import { getgame } from "../../src/api/api";
+import { getGame } from "../../src/api/api";
+import { useRouter } from "next/router";
+import GameInfo from "../src/components/GameInfo";
 
 export default function Games() {
     const user = queryClient.getQueryData(["user"]);
@@ -61,7 +61,15 @@ export default function Games() {
                             Games
                         </Heading>
                         <VStack spacing={4}>
-                            {game.name}
+                            {game && game.results ? (
+                                game.results?.map((game) => (
+                                    <Box w="full" key={game.id}>
+                                        <GameInfo game={game} setBets={setBets} bets={bets} />
+                                    </Box>
+                                ))
+                            ) : (
+                                <p>No games</p>
+                            )}
                         </VStack>
                     </Flex>
                 </HStack>
