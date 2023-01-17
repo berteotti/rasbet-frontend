@@ -35,82 +35,51 @@ import { updateUser, updateWallet } from "../src/api/api";
 import { getWallet } from "../src/api/api";
 import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
-import Header from "../src/components/Header";
+import {useUpdateUser,useMutateUser} from "../src/logic/profileHandler";
+import Header from "../src/components/header";
 
 const IconUser = chakra(FaUserAlt);
 const IconMail = chakra(FaAt);
 const IconName = chakra(FaRegUser);
 
+
 export default function Profile() {
+
   const router = useRouter();
   const user = queryClient.getQueryData(["user"]);
 
-  if (process.browser && !Boolean(user)) {
-    router.push("/");
-  }
+  const { username , firstName, lastName, email, amount,defAmount,
+    handleUsernameChange, handleFirstNameChange, handleLastNameChange, handleEmailChange, incrementAmount , handleSum, handleDec, handleWallet} = useUpdateUser(user);
+  const mutation = useMutateUser(user?.id, email, username, firstName, lastName);
 
-  const mutation = useMutation(
-    () =>
-      updateUser({
-        id: user.id,
-        email,
-        username,
-        first_name: firstName,
-        last_name: lastName,
-      }),
-    {
+    const { data: newWallet } = useQuery({
+      queryKey: ["wallet"],
+      queryFn: () => getWallet({ id: user?.wallet }),
+      enabled: Boolean(user),
       onSuccess: (data) => {
-        queryClient.setQueryData(["user"], data);
+        handleWallet(data.balance);
       },
-    }
-  );
-
-  const { data: newWallet } = useQuery({
-    queryKey: ["wallet"],
-    queryFn: () => getWallet({ id: user?.wallet }),
-    enabled: Boolean(user),
-    onSuccess: (data) => {
-      setSum(data.balance);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
-
-  const walletMutation = useMutation(
-    () =>
-      updateWallet({
-        id: newWallet.id,
-        balance: defAmount,
-      }),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData(["wallet"], data);
+      onError: (err) => {
+        console.log(err);
       },
-    }
-  );
+    });
 
-  const [username, setUsername] = useState(user?.username);
-  const [firstName, setFirstName] = useState(user?.first_name);
-  const [lastName, setLastnName] = useState(user?.last_name);
-  const [email, setEmail] = useState(user?.email);
-  const [amount, setAmount] = useState(0);
-  const [defAmount, setSum] = useState(0);
+    const walletMutation = useMutation(
+        () =>
+            updateWallet({
+              id: newWallet.id,
+              balance: defAmount,
+            }),
+        {
+          onSuccess: (data) => {
+            queryClient.setQueryData(["wallet"], data);
+          },
+        }
+    );
 
-  const handleUsernameChange = (event) => setUsername(event.target.value);
-  const handleFirstNameChange = (event) => setFirstName(event.target.value);
-  const handleLastNameChange = (event) => setLastnName(event.target.value);
-  const handleEmailChange = (event) => setEmail(event.target.value);
-  const incrementAmount = (event) => setAmount(event.target.value);
-  const handleSum = () => setSum(Number(defAmount) + Number(amount));
-  const handleDec = () => {
-    if (Number(defAmount) === 0) {
-      window.alert("Não possui dinheiro na conta.");
-    } else if (Number(amount) > Number(defAmount)) {
-      window.alert("Quantia excede o valor que está na conta.");
-    } else setSum(Number(defAmount) - Number(amount));
-  };
 
+
+  //UI
   return (
     <Container
       maxW="100%"
@@ -280,6 +249,7 @@ export default function Profile() {
                 onSubmit={(event) => {
                   event.preventDefault();
                   mutation.mutate();
+
                 }}
               >
                 <Stack
