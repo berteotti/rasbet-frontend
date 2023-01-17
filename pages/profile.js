@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Flex,
   Heading,
@@ -37,13 +37,14 @@ import { useRouter } from "next/router";
 import { queryClient } from "../src/query";
 import { useUpdateUser, useMutateUser } from "../src/logic/profileHandler";
 import Header from "../src/components/header";
+import { AuthContext } from "../src/context/AuthContext";
 
 const IconUser = chakra(FaUserAlt);
 const IconMail = chakra(FaAt);
 const IconName = chakra(FaRegUser);
 
 export default function Profile() {
-  const user = queryClient.getQueryData(["user"]);
+  const { user } = useContext(AuthContext);
 
   const {
     username,
