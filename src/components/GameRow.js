@@ -62,9 +62,6 @@ export default function GameRow({ game, setBets, bets, subscription }) {
         <Text as="b">
           {home_team} - {away_team}
         </Text>
-        <Button as={Link} href={`/game/${game.id}`} colorScheme="teal">
-          Ver jogo
-        </Button>
         <HStack padding={3}>
           {subscription ? (
             <IconButton
@@ -79,7 +76,9 @@ export default function GameRow({ game, setBets, bets, subscription }) {
               onClick={() => createMutation.mutate()}
             />
           )}
-          <Button colorScheme="teal">Ver jogo</Button>
+          <Button as={Link} href={`/game/${game.id}`} colorScheme="teal">
+            Ver jogo
+          </Button>
         </HStack>
       </Flex>
       {outcomes && outcomes.length && (
